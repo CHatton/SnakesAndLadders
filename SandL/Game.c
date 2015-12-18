@@ -34,10 +34,11 @@ int rollDice(); // generates number from 1 - 6
 void save(); // allows the user to save to one of three files
 int load(); // allows the user to load a previously saved game
 void startNewGame(char); // allows the user to start a new game without restarting the program
-int boardRows;
-int boardCols;
+
 
 char** gameBoard;
+int boardRows;
+int boardCols;
 player_t* players; // store the players
 snake_t* snakes; // store the snakes
 ladder_t* ladders; // store the ladders
@@ -121,7 +122,7 @@ void main() {
 			printf("Are you sure you want to start a new game? (Y/N): ");
 			// only want to prompt if they make a new game after starting a new game for the first time
 			scanf(" %c", &newGame);
-			activePlayer = 0; // reset player to first
+			
 			startNewGame(newGame);
 			break;
 		case 'r':
@@ -139,14 +140,16 @@ void main() {
 
 			fromPos = players[activePlayer].pos; // get the position they're at right now
 			players[activePlayer].pos += rolled; // add whatever they rolled
-			toPos = players[activePlayer].pos; // get the position they're not at
+			toPos = players[activePlayer].pos; // get the position they're now at
 
-			players[activePlayer].row = players[activePlayer].pos / boardRows; // gets the row the player is on
+			players[activePlayer].row = players[activePlayer].pos / boardCols; // gets the row the player is on
 			players[activePlayer].col = players[activePlayer].pos % boardCols; // gets the col the player is on
 
 
 			if (toPos >= boardRows * boardCols) {
 				players[activePlayer].pos = boardRows * boardCols; // make sure you don't print a number greater than 100
+				players[activePlayer].row = boardRows - 1; // make it so there's no index out of bounds exception if player won
+				players[activePlayer].col = boardCols - 1;
 				toPos = boardRows * boardCols;
 			}
 
@@ -157,7 +160,7 @@ void main() {
 				// bottom of ladder
 				for (i = 0; i < numSnakesAndLadders; i++) { // search through ladders
 					if ((ladders[i].tailRow * boardRows + ladders[i].tailCol) == toPos) { // locate the one that links to the one landed on
-						players[activePlayer].pos = (ladders[i].tailRow * boardRows + ladders[i].tailCol); // move the player up to that position
+						players[activePlayer].pos = (ladders[i].headRow * boardCols + ladders[i].headCol); // move the player up to that position
 						players[activePlayer].row = ladders[i].headRow;
 						players[activePlayer].col = ladders[i].headCol;
 						printf("Player %d landed at the base of a ladder! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
@@ -169,14 +172,14 @@ void main() {
 			else if (gameBoard[players[activePlayer].row][players[activePlayer].col] == 'S') {
 				// head of snake
 				for (i = 0; i < numSnakesAndLadders; i++) {
-					if ((snakes[i].tailRow * boardRows + snakes[i].headCol) == toPos) { // if player landed on head of a snake
-						players[activePlayer].pos = (snakes[i].tailRow * boardRows + snakes[i].headCol); // move player to the tail position on the snake
+					if ((snakes[i].headRow * boardRows + snakes[i].headCol) == toPos) { // if player landed on head of a snake
+						players[activePlayer].pos = (snakes[i].tailRow * boardCols + snakes[i].tailCol); // move player to the tail position on the snake
 						players[activePlayer].row = snakes[i].tailRow;
 						players[activePlayer].col = snakes[i].tailCol;
 
 
 						printf("Player %d landed on the head of a snake! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
-						break; // no need to search further8
+						break; // no need to search further
 
 
 					} // if landed on snake head
@@ -279,7 +282,7 @@ function.
 */
 
 void randomizeBoard(char type) {
-	int i, j;
+	int i;
 
 	int r;
 	int hrow, hcol, trow, tcol; // head row , col and tail row, col
@@ -446,6 +449,7 @@ void printBoard() {
 			copyBoard[row][col] = gameBoard[row][col];
 		}
 	}
+	copyBoard[boardRows - 1][boardCols - 1] = '*';
 	/*
 	The reason I created a copy of the board instead
 	of using the board itself is that I want to
@@ -457,28 +461,43 @@ void printBoard() {
 	I need from the board.
 	*/
 
-	for (row = 0; row < numPlayers; row++) {
-		playerPos = players[row].pos - 1; // position doesn't exactly allign with display
-		playerRow = playerPos / boardRows; // get the current row
+	for (i = 0; i < numPlayers; i++) {
+		playerPos = players[i].pos - 1; // position doesn't exactly allign with display
+		playerRow = playerPos / boardCols; // get the current row
 		playerCol = playerPos % boardCols; // get the current col
 		copyBoard[playerRow][playerCol] = 'P'; // fill up that position with a 'P' to show player
 	} // show the players on the board but don't overwrite the main board
 
-	printf("\n==============================\n");
+	printf("\n ");
+
+	for (i = 0; i < boardCols; i++) {
+		printf("===");
+	}
+	printf("=\n ");
+
 	for (row = boardRows-1; row >= 0; row--) {
 
 		if (row % 2 == 0) {
 			for (col = 0; col < boardCols; col++) {
-
 				printf("|%c ", copyBoard[row][col]);
 			}
-			printf("|\n==============================\n");
+			printf("|\n ");
+
+			for (i = 0; i < boardCols; i++) {
+				printf("===");
+			}
+			printf("=\n ");
 		}
 		else { // flip the odd rows to show it like the actual board game
 			for (col = boardCols-1; col >= 0; col--) {
 				printf("|%c ", copyBoard[row][col]);
 			}
-			printf("|\n==============================\n");
+			printf("|\n ");
+
+			for (i = 0; i < boardCols; i++) {
+				printf("===");
+			}
+			printf("=\n ");
 		}
 
 
@@ -497,7 +516,7 @@ int rollDice() {
 }
 
 int load() { // load a previously saved game
-	int choice, i,j;
+	int choice, i;
 
 	printf("Load which save file? - 1,2 or 3?: ");
 	scanf("%d", &choice);
@@ -530,21 +549,12 @@ int load() { // load a previously saved game
 			gameBoard[i] = (char*)malloc(boardCols * sizeof(char));
 		}
 
-		
-		for (i = 0; i < boardRows; i++) {
-			for (j = 0; j < boardCols; j++) {
-				printf("%c ", gameBoard[i][j]);
-			}
-			printf("\n");
-		}
-
 		initBoard(); // reset the contents of the board
 
 
 		for (i = 0; i < numSnakesAndLadders; i++) {
 			fscanf(file, "%d %d %d %d\n"
 				, &snakes[i].headCol,  &snakes[i].headRow, &snakes[i].tailCol, &snakes[i].tailRow);
-
 
 			gameBoard[snakes[i].headRow][snakes[i].headCol] = 'S';
 			gameBoard[snakes[i].tailRow][snakes[i].tailCol] = 's';
@@ -606,13 +616,18 @@ void startNewGame(newGame) {
 		players = (player_t*)malloc(numPlayers*sizeof(player_t));
 		// dynamically create storage for number of players
 
-		printf("Choose board rows (reccomended 10): ");
-		scanf("%d", &boardRows);
 
-		printf("Choose board cols (reccomended 10): ");
-		scanf("%d", &boardCols);
+		do {
+			printf("Choose board rows between 5 and 30 (reccomended 10): ");
+			scanf("%d", &boardRows);
+		} while (boardRows > 30 || boardRows < 5);
 
+		do{
+			printf("Choose board cols between 5 and 30 (reccomended 10): ");
+			scanf("%d", &boardCols);
+		} while (boardCols > 30 || boardCols < 5);
 			
+		
 
 		// Dynamically allocate board space
 		gameBoard = (char**)malloc(boardRows*sizeof(char*));
@@ -634,16 +649,16 @@ void startNewGame(newGame) {
 		players[0].isTurn = true; // ensure player one is always the first player
 
 								  // density of snakes and ladders
-								  // s/S - 5 snakes and ladders
-								  // m/M - 7 snakes and ladders
-								  // l/L - 10 snakes and ladders
+								  // s/S - 5% snakes and ladders
+								  // m/M - 7% snakes and ladders
+								  // l/L - 10% snakes and ladders
 		printf("Choose the density of snakes and ladders: (S)mall, (M)edium, (L)arge > Reccomended is Medium: ");
 		scanf(" %c", &choice); // read in the game density
 
 		printf("\n\n"); // new line for formatting
 		randomizeBoard(choice); // creates the game based on the user's choice
 
-		printf("Game has started with the following settings: \nPlayers: %d\nNo Snakes/Ladders %d\n\n", numPlayers, numSnakesAndLadders);
+		printf("Game has started with the following settings: \nPlayers: %d\nNo Snakes/Ladders %d\nBoard dimensions %d X %d\n\nHave Fun!\n", numPlayers, numSnakesAndLadders,boardRows,boardCols);
 		// print out the starting conditions for the game
 		break;
 	case 'n':

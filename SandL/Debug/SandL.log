@@ -1,55 +1,53 @@
-﻿Build started 18/12/2015 18:35:37.
+﻿Build started 18/12/2015 20:18:56.
      1>Project "D:\Dropbox\Dropbox\Documents\Visual Studio 2015\Projects\SandL\SandL\SandL.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt Game.c
          Game.c
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(62): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(63): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(102): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(103): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(123): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(124): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(193): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(196): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(233): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(236): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\conio.h(452): note: see declaration of 'getch'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(287): warning C4013: 'time' undefined; assuming extern returning int
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(297): warning C4013: 'floor' undefined; assuming extern returning int
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(282): warning C4101: 'j': unreferenced local variable
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(284): warning C4101: 'r': unreferenced local variable
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(384): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(290): warning C4013: 'time' undefined; assuming extern returning int
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(287): warning C4101: 'r': unreferenced local variable
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(387): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(388): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(391): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(390): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(393): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(392): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(395): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(381): warning C4101: 'j': unreferenced local variable
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(503): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(384): warning C4101: 'j': unreferenced local variable
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(522): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(506): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(525): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(508): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(527): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(510): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(529): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(521): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(540): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(546): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(557): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(559): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(569): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(568): warning C4477: 'fscanf' : format string '%d' requires an argument of type 'int *', but variadic argument 2 has type 'bool *'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(568): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(578): warning C4477: 'fscanf' : format string '%d' requires an argument of type 'int *', but variadic argument 2 has type 'bool *'
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(578): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(602): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(612): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(610): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(622): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(613): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(627): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
-     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(641): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\dropbox\dropbox\documents\visual studio 2015\projects\sandl\sandl\game.c(656): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1270): note: see declaration of 'scanf'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\Dropbox\Documents\Visual Studio 2015\Projects\SandL\Debug\SandL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\Dropbox\Dropbox\Documents\Visual Studio 2015\Projects\SandL\Debug\SandL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\Dropbox\Documents\Visual Studio 2015\Projects\SandL\Debug\SandL.lib" /MACHINE:X86 Debug\Game.obj
@@ -58,4 +56,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.32
+Time Elapsed 00:00:00.45
