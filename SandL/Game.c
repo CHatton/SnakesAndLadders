@@ -15,7 +15,6 @@ typedef struct ladder_t {
 	int headCol; // col of head
 	int tailRow; // row of tail
 	int tailCol; // col of tail
-				 // need to know where the start and end of the ladder is
 } ladder_t;
 
 typedef struct snake_t {
@@ -23,7 +22,6 @@ typedef struct snake_t {
 	int headCol; // col of head
 	int tailRow; // row of tail
 	int tailCol; // col of tail
-				 // need to know where the start and end of the snake is
 } snake_t;
 
 void printBoard(); // displays the current game board state
@@ -32,35 +30,34 @@ void initBoard(); // initializes board
 void showSnakesLaddersPos(); // prints out the positions of all snakes and ladders in the game
 int rollDice(); // generates number from 1 - 6
 void save(); // allows the user to save to one of three files
-int load(); // allows the user to load a previously saved game
+bool load(); // allows the user to load a previously saved game
 void startNewGame(char); // allows the user to start a new game without restarting the program
+void roll(); // move player along the board
 
-
-char** gameBoard;
-int boardRows;
-int boardCols;
+char** gameBoard; // pointer to game board
 player_t* players; // store the players
 snake_t* snakes; // store the snakes
 ladder_t* ladders; // store the ladders
-
-int numSnakesAndLadders; // the amount of snakes and ladders in the game
-//int* length = &numSnakesAndLadders; // point to number of snakes as the value is used in multiple functions
-int numPlayers; // number of players in the game
 FILE* file; // need a file pointer for saving and loading the game
 
+int boardRows; // number of rows in the board
+int boardCols; // number of cols in the board
+int activePlayer; // the current player that is active
+int numSnakesAndLadders; // the amount of snakes and ladders in the game
+int numPlayers; // number of players in the game
+
+
 void main() {
-	int loaded = 0; // assume no load has taken place
+	bool loaded = false; // assume no load has taken place
 	int i; // counter
 	char choice; // user choice for main switch
-	int activePlayer; // determines which player is currently active
 	int fromPos, toPos; // keep track of where players were and where they moved to
 	int rolled; // hold onto the value rolled
 	char newGame; // store the user's choice to start a new game
 
-				  // prompt to load game
 	do {
 		printf("Would you like to load a previously saved game? (Y/N)");
-		scanf(" %c", &choice);
+		scanf(" %c", &choice); // prompt to load game
 
 	} while (choice != 'n'
 		&& choice != 'N'
@@ -79,7 +76,6 @@ void main() {
 
 	if (loaded == 0) // no game was loaded, start a new game
 		startNewGame('y'); // when a game is initially started, force a "yes" choice
-
 
 	activePlayer = 0; // start of with player at index[0] being the active player
 	while (choice != 'x' && choice != 'X') {
@@ -122,106 +118,10 @@ void main() {
 			printf("Are you sure you want to start a new game? (Y/N): ");
 			// only want to prompt if they make a new game after starting a new game for the first time
 			scanf(" %c", &newGame);
-			
-			startNewGame(newGame);
+			startNewGame(newGame); // start a new game with their choice
 			break;
 		case 'r':
-		case 'R':
-			players[activePlayer].isTurn = false;
-			/*
-			it should only be one player active at
-			a time. As soon as the player takes their
-			turn, isTurn is set to false.
-			*/
-
-			rolled = rollDice(); // random value from 1- 6
-			printf("\nPlayer %d Rolled a %d!\n", (activePlayer + 1), rolled);
-			// shows which player rolled the dice and what they got
-
-			fromPos = players[activePlayer].pos; // get the position they're at right now
-			players[activePlayer].pos += rolled; // add whatever they rolled
-			toPos = players[activePlayer].pos; // get the position they're now at
-
-			players[activePlayer].row = players[activePlayer].pos / boardCols; // gets the row the player is on
-			players[activePlayer].col = players[activePlayer].pos % boardCols; // gets the col the player is on
-
-
-			if (toPos >= boardRows * boardCols) {
-				players[activePlayer].pos = boardRows * boardCols; // make sure you don't print a number greater than 100
-				players[activePlayer].row = boardRows - 1; // make it so there's no index out of bounds exception if player won
-				players[activePlayer].col = boardCols - 1;
-				toPos = boardRows * boardCols;
-			}
-
-			printf("Player %d moved from position %d to position %d\n", (activePlayer + 1), fromPos, toPos);
-			// lets the user know where they have moved from and to
-
-			if (gameBoard[players[activePlayer].row][players[activePlayer].col] == 'l') {
-				// bottom of ladder
-				for (i = 0; i < numSnakesAndLadders; i++) { // search through ladders
-					if ((ladders[i].tailRow * boardRows + ladders[i].tailCol) == toPos) { // locate the one that links to the one landed on
-						players[activePlayer].pos = (ladders[i].headRow * boardCols + ladders[i].headCol); // move the player up to that position
-						players[activePlayer].row = ladders[i].headRow;
-						players[activePlayer].col = ladders[i].headCol;
-						printf("Player %d landed at the base of a ladder! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
-						break; // don't need to look anymore
-					} // look through ladders
-				} // for
-			} // if ladder
-
-			else if (gameBoard[players[activePlayer].row][players[activePlayer].col] == 'S') {
-				// head of snake
-				for (i = 0; i < numSnakesAndLadders; i++) {
-					if ((snakes[i].headRow * boardRows + snakes[i].headCol) == toPos) { // if player landed on head of a snake
-						players[activePlayer].pos = (snakes[i].tailRow * boardCols + snakes[i].tailCol); // move player to the tail position on the snake
-						players[activePlayer].row = snakes[i].tailRow;
-						players[activePlayer].col = snakes[i].tailCol;
-
-
-						printf("Player %d landed on the head of a snake! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
-						break; // no need to search further
-
-
-					} // if landed on snake head
-				} // search through snakes
-			}
-			else {
-				// normal square, nothing special! - check for victory
-				if (players[activePlayer].pos >= boardRows * boardCols) {
-
-					printf("Player %d has won the game!\n", (activePlayer + 1));
-
-					do {
-						printf("Would you like to start a new game? (Y/N): ");
-						scanf(" %c", &choice);
-					} while (choice != 'n'
-						&& choice != 'N'
-						&& choice != 'y'
-						&& choice != 'Y');
-
-					switch (choice) {
-					case 'n':
-					case 'N': printf("Thank you for playing!\n");
-						choice = 'x';
-						break;
-					case 'y':
-					case 'Y':startNewGame(choice);
-						break;
-					default:
-						break;
-					}
-				}
-			}
-
-
-			// other wise assign the next player
-			if (activePlayer == (numPlayers - 1)) { // if it's the last player
-				activePlayer = 0; // back to player 1
-			}
-			else {
-				activePlayer++; // next player's turn
-			}
-
+		case 'R': roll(); // advances player turn
 			break;
 		case 'p':
 		case 'P':showSnakesLaddersPos(); // print out all the positions of the snakes and ladders
@@ -241,7 +141,7 @@ void showSnakesLaddersPos() {
 	int headPos, tailPos;
 
 	for (i = 0; i < numSnakesAndLadders; i++) {
-		headPos = (ladders[i].headRow * boardRows) + ladders[i].headCol;
+		headPos = (ladders[i].headRow * boardCols) + ladders[i].headCol;
 		tailPos = (ladders[i].tailRow * boardCols) + ladders[i].tailCol;
 		printf("Ladder #%d: Head at pos: %d, bottom at pos: %d\n", (i + 1), headPos + 1, tailPos + 1);
 	}// show the locatin of all the ladders on the board
@@ -249,7 +149,7 @@ void showSnakesLaddersPos() {
 	printf("\n");
 
 	for (i = 0; i < numSnakesAndLadders; i++) {
-		headPos = (snakes[i].headRow * boardRows) + snakes[i].headCol;
+		headPos = (snakes[i].headRow * boardCols) + snakes[i].headCol;
 		tailPos = (snakes[i].tailRow * boardCols) + snakes[i].tailCol;
 		printf("Snake #%d: Head at pos: %d, tail at pos: %d\n", (i + 1), headPos + 1, tailPos + 1);
 	} // show the location of all snakes on the board
@@ -282,37 +182,32 @@ function.
 */
 
 void randomizeBoard(char type) {
-	int i;
-
-	int r;
+	int i; // counter
 	int hrow, hcol, trow, tcol; // head row , col and tail row, col
 
 	srand(time(NULL));
 	// make the seed for the random numbers the current time
 	switch (type) {
-	case 'S':
-	case 's': numSnakesAndLadders = (boardCols * boardRows) / 20; // 5% of total
+	case 'L':
+	case 'l': numSnakesAndLadders = (boardCols * boardRows) / 20; // 5% of total
 		break;
 	case 'M':
 	case 'm': numSnakesAndLadders = (boardCols * boardRows) /14; // 7% of total
 		break;
-	case 'L':
-	case 'l': numSnakesAndLadders = (boardCols * boardRows)/10; // 10% of total
+	case 'H':
+	case 'h': numSnakesAndLadders = (boardCols * boardRows)/10; // 10% of total
 		break;
 	default:
 		numSnakesAndLadders = (boardCols * boardRows) / 14; // 7% default
 		break;
 	}
 
-	//numSnakesLadders = 7; // force it to be 7 for testing purposes
-	// this creates a random number between 0 and the number of snakes
-	// and ladders needed in the game
-
 	// create an array of snakes and ladders using dynamic memory allocation
 	snakes = (snake_t*)malloc(numSnakesAndLadders*sizeof(snake_t));
 	ladders = (ladder_t*)malloc(numSnakesAndLadders*sizeof(ladder_t));
 
 	for (i = 0; i < numSnakesAndLadders; i++) {
+
 		/*
 		CONDITIONS FOR A LADDER
 		1. the head must be above the tail
@@ -325,15 +220,12 @@ void randomizeBoard(char type) {
 
 			trow = rand() % boardRows;
 			tcol = rand() % boardCols; // randomly assign row and col for tail
-
-		//	break;
 		} while ((hrow < trow) // cannot be in a lower row
 			|| (hrow == trow) // cannot be on the same row
-			|| (gameBoard[hrow][hcol] != ' ') // must be an empty space
-			|| (gameBoard[trow][tcol] != ' ')  // must be an empty space
+			|| (gameBoard[hrow][hcol] != ' ') // not an empty space
+			|| (gameBoard[trow][tcol] != ' ')  // not an empty space
 			|| (hrow == (boardRows - 1) && hcol == (boardCols-1))); // must not be the final square
-										  // conditions for being invalid
-
+			
 
 		ladders[i].headCol = hcol;
 		ladders[i].headRow = hrow;
@@ -341,10 +233,14 @@ void randomizeBoard(char type) {
 		ladders[i].tailRow = trow;
 		// fill in the details for that ladder
 
+		gameBoard[ladders[i].headRow][ladders[i].headCol] = 'L';
+		gameBoard[ladders[i].tailRow][ladders[i].tailCol] = 'l';
+		// fill up the gameboard with the positions of the ladders
+
 		/*
 		CONDITIONS FOR SNAKE
 		1. the head must be below the tail
-		3. must not be in last position
+		2. must not be in last position
 		*/
 
 		do {
@@ -355,28 +251,22 @@ void randomizeBoard(char type) {
 			tcol = rand() % boardCols; // randomly assign row and col for tail
 		} while ((hrow < trow) // must not be in a higher row
 			|| (hrow == trow) // must not be on the same row
-			|| gameBoard[hrow][hcol] != ' ' // must not be an empty space
-			|| gameBoard[trow][tcol] != ' '  // must not be an empty space
+			|| gameBoard[hrow][hcol] != ' ' // must be an empty space
+			|| gameBoard[trow][tcol] != ' '  // must be an empty space
 			|| (hrow == (boardRows - 1) && hcol == (boardCols - 1))); // must not be on the last square
+			// conditions for being invalid
 
 		snakes[i].headCol = hcol;
 		snakes[i].headRow = hrow;
 		snakes[i].tailCol = tcol;
 		snakes[i].tailRow = trow;
-	} // for each snake and ladder
 
-	  /*
-	  at this point, we know how many snakes and ladders we have
-	  on the board, and we know everything we need to populate the
-	  main game board with the snakes and ladders from the array
-	  */
-
-	for (i = 0; i < numSnakesAndLadders; i++) {
 		gameBoard[snakes[i].headRow][snakes[i].headCol] = 'S';
 		gameBoard[snakes[i].tailRow][snakes[i].tailCol] = 's';
-		gameBoard[ladders[i].headRow][ladders[i].headCol] = 'L';
-		gameBoard[ladders[i].tailRow][ladders[i].tailCol] = 'l';
-	} // fill up the gameboard with the positions of the snakes and ladders
+		// fill up the gameboard with the positions of the snakes
+
+	} // for each snake and ladder
+
 
 } // randomizeBoard
 
@@ -385,7 +275,6 @@ void save() {
 
 	printf("Save over which file? - 1, 2, 3: ");
 	scanf("%d", &save);
-
 
 	switch (save) {
 	case 1:file = fopen("save1.dat", "w");
@@ -397,11 +286,12 @@ void save() {
 	default:
 		printf("Sorry, please enter either 1,2 or 3 for saving the game!\n");
 		file = NULL;
-	}
+	} // open up one of three files, or give error message
 
 	if (file != NULL) { // save over the specified file
 
 		fprintf(file, "%d %d %d %d\n", numPlayers, numSnakesAndLadders,boardRows,boardCols);
+		// save all the non snakes/ladders/players info needed
 
 		for (i = 0; i < numSnakesAndLadders; i++) {
 			fprintf(file, "%d %d %d %d\n"
@@ -418,9 +308,7 @@ void save() {
 		} // print all the player information
 		fclose(file); // close the file
 
-					  //should be able to recreate any given board state with this information
-
-
+	    //should be able to recreate any given board state with this information
 		printf("Successfully Saved to the file!\n\n");
 
 	}
@@ -430,13 +318,12 @@ void save() {
 }
 
 void printBoard() {
-	int row;
-	int col;
+	int row, col;
 	int playerPos;
 	int playerRow;
 	int playerCol;
 	int i;
-	//char copyBoard[boardRows][boardCols];
+	
 	char** copyBoard;
 	copyBoard = (char**)malloc(boardRows*sizeof(char*));
 
@@ -449,7 +336,14 @@ void printBoard() {
 			copyBoard[row][col] = gameBoard[row][col];
 		}
 	}
+
+	/*
+	Dynamically create a 2D array which is a copy
+	of the main game board.
+	*/
+
 	copyBoard[boardRows - 1][boardCols - 1] = '*';
+	// * to indicate the last position on the board
 	/*
 	The reason I created a copy of the board instead
 	of using the board itself is that I want to
@@ -468,12 +362,12 @@ void printBoard() {
 		copyBoard[playerRow][playerCol] = 'P'; // fill up that position with a 'P' to show player
 	} // show the players on the board but don't overwrite the main board
 
-	printf("\n ");
+	printf("\n "); // formatting
 
 	for (i = 0; i < boardCols; i++) {
-		printf("===");
+		printf("==="); // formatting
 	}
-	printf("=\n ");
+	printf("=\n "); // formatting
 
 	for (row = boardRows-1; row >= 0; row--) {
 
@@ -481,26 +375,35 @@ void printBoard() {
 			for (col = 0; col < boardCols; col++) {
 				printf("|%c ", copyBoard[row][col]);
 			}
-			printf("|\n ");
+			printf("|\n "); // formatting
 
 			for (i = 0; i < boardCols; i++) {
-				printf("===");
+				printf("==="); // formatting
 			}
-			printf("=\n ");
+			printf("=\n "); // formatting
 		}
 		else { // flip the odd rows to show it like the actual board game
 			for (col = boardCols-1; col >= 0; col--) {
 				printf("|%c ", copyBoard[row][col]);
 			}
-			printf("|\n ");
+			printf("|\n "); // formatting
 
 			for (i = 0; i < boardCols; i++) {
-				printf("===");
+				printf("==="); // formatting
 			}
-			printf("=\n ");
+			printf("=\n "); // formatting
 		}
 
-
+		/*
+		in this function, because of how the positions
+		on a snakes and ladders board are arranged, every
+		other row needs to be printed out backwards. The
+		contents of the array don't need to be changed, it's
+		just the printing to the screen for the user to see.
+		The formatting is a bit messy, but because I chose 
+		to let the user pick the size of the board, the formatting
+		needs to change based on the given board size.
+		*/
 	}
 } // printBoard
   /*
@@ -515,7 +418,7 @@ int rollDice() {
 	return (rnd + 1); // returns 1 - 6 rather than 0 - 5
 }
 
-int load() { // load a previously saved game
+bool load() { // load a previously saved game
 	int choice, i;
 
 	printf("Load which save file? - 1,2 or 3?: ");
@@ -538,19 +441,27 @@ int load() { // load a previously saved game
 						// read in all the values from the file
 		
 		fscanf(file, "%d %d %d %d\n", &numPlayers, &numSnakesAndLadders,&boardRows, &boardCols);
+		// read in the non snakes/players/ladders info
 
 		players = (player_t*)malloc(sizeof(player_t)*numPlayers); // create array to store players
 		snakes = (snake_t*)malloc(sizeof(snake_t)*(numSnakesAndLadders)); // create array to store snakes
 		ladders = (ladder_t*)malloc(sizeof(ladder_t)*(numSnakesAndLadders)); // create array to store ladders
+		// re-create the arrays to store the players, snakes and ladders
+
 
 		gameBoard = (char**)malloc(boardRows*sizeof(char*));
 
 		for (i = 0; i < boardRows; i++) {
 			gameBoard[i] = (char*)malloc(boardCols * sizeof(char));
 		}
+		// re-create the game board
 
 		initBoard(); // reset the contents of the board
 
+		/*
+		I need to use initBoard AFTER I've created the board and know
+		the board rows and board cols.
+		*/
 
 		for (i = 0; i < numSnakesAndLadders; i++) {
 			fscanf(file, "%d %d %d %d\n"
@@ -561,8 +472,6 @@ int load() { // load a previously saved game
 			// update the board with the position of the snakes
 
 		} // load all the snake information
-
-	
 
 		for (i = 0; i < numSnakesAndLadders; i++) {
 			fscanf(file, "%d %d %d %d\n"
@@ -579,6 +488,11 @@ int load() { // load a previously saved game
 		} // load from file
 		fclose(file); // close the file
 
+		/*
+			when the boolean isTurn is saved as an int, it will
+			be 1 for true, and 0 for false.
+		*/
+
 		for (i = 0; i < numPlayers; i++) {
 			switch (players[i].isTurn) {
 			case 1: players[i].isTurn = true;
@@ -587,15 +501,15 @@ int load() { // load a previously saved game
 				break;
 			default:
 				break;
-			}
+			} // assign each player their current "isTurn" value
 		}
 
 		printf("Successfully loaded the game! - Have fun!\n");
-		return 1; // 1 if there was a load
+		return true; // 1 indicates that a load has occurred
 	}
 	else { // file doesn't exist
 		printf("Sorry, there was an error opening the file.\n");
-		return 0; // 0 if there was not a load
+		return false; // 0 if there was not a load
 	}
 } // load
 
@@ -606,7 +520,6 @@ void startNewGame(newGame) {
 	switch (newGame) {
 	case 'y':
 	case 'Y':
-				
 		do { // how many players
 			printf("Start a game with how many players? (2-6): ");
 			scanf("%d", &numPlayers);
@@ -621,6 +534,7 @@ void startNewGame(newGame) {
 			printf("Choose board rows between 5 and 30 (reccomended 10): ");
 			scanf("%d", &boardRows);
 		} while (boardRows > 30 || boardRows < 5);
+	
 
 		do{
 			printf("Choose board cols between 5 and 30 (reccomended 10): ");
@@ -647,12 +561,13 @@ void startNewGame(newGame) {
 		} // initialize all the players in the game
 
 		players[0].isTurn = true; // ensure player one is always the first player
-
-								  // density of snakes and ladders
-								  // s/S - 5% snakes and ladders
-								  // m/M - 7% snakes and ladders
-								  // l/L - 10% snakes and ladders
-		printf("Choose the density of snakes and ladders: (S)mall, (M)edium, (L)arge > Reccomended is Medium: ");
+		/*
+		density of snakes and ladders
+		l/L - 5% of board size snakes and ladders
+		m/M - 7% of board size snakes and ladders
+		h/H - 10% of board size snakes and ladders
+		*/
+		printf("Choose the density of snakes and ladders: (L)ow, (M)edium or (H)igh (Reccomended is Medium): ");
 		scanf(" %c", &choice); // read in the game density
 
 		printf("\n\n"); // new line for formatting
@@ -668,3 +583,110 @@ void startNewGame(newGame) {
 		break;
 	} // switch
 } // startNewGame
+
+void roll() {
+	char choice;
+	int i;
+	int fromPos, toPos;
+	int rolled;
+
+	players[activePlayer].isTurn = false;
+	/*
+	it should only be one player active at
+	a time. As soon as the player takes their
+	turn, isTurn is set to false.
+	*/
+
+	rolled = rollDice(); // random value from 1- 6
+	printf("\nPlayer %d Rolled a %d!\n", (activePlayer + 1), rolled);
+	// shows which player rolled the dice and what they got
+
+	fromPos = players[activePlayer].pos; // get the position they're at right now
+	players[activePlayer].pos += rolled; // add whatever they rolled
+	toPos = players[activePlayer].pos; // get the position they're now at
+
+	players[activePlayer].row = players[activePlayer].pos / boardCols; // gets the row the player is on
+	players[activePlayer].col = players[activePlayer].pos % boardCols; // gets the col the player is on
+
+
+	if (toPos >= boardRows * boardCols) { // player has won
+		players[activePlayer].pos = boardRows * boardCols; // make sure you don't print a number greater than 100
+		players[activePlayer].row = boardRows - 1; // make it so there's no index out of bounds exception if player won
+		players[activePlayer].col = boardCols - 1;
+		toPos = boardRows * boardCols;
+	}
+
+	if (fromPos == 0) {
+		printf("Player %d moved to position %d\n", (activePlayer + 1), toPos);
+	} // so it doesn't say from 0 to X
+	else
+	{
+
+		printf("Player %d moved from position %d to position %d\n", (activePlayer + 1), fromPos, toPos);
+		// lets the user know where they have moved from and to
+	}
+	if (gameBoard[players[activePlayer].row][players[activePlayer].col] == 'l') {
+		// bottom of ladder
+		for (i = 0; i < numSnakesAndLadders; i++) { // search through ladders
+			if ((ladders[i].tailRow * boardRows + ladders[i].tailCol) == toPos) { // locate the one that links to the one landed on
+				players[activePlayer].pos = (ladders[i].headRow * boardCols + ladders[i].headCol); // move the player up to that position
+				players[activePlayer].row = ladders[i].headRow;
+				players[activePlayer].col = ladders[i].headCol;
+				printf("Player %d landed at the base of a ladder! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
+				break; // don't need to look anymore
+			} // look through ladders
+		} // for
+	} // if ladder
+
+	else if (gameBoard[players[activePlayer].row][players[activePlayer].col] == 'S') {
+		// head of snake
+		for (i = 0; i < numSnakesAndLadders; i++) {
+			if ((snakes[i].headRow * boardRows + snakes[i].headCol) == toPos) { // if player landed on head of a snake
+				players[activePlayer].pos = (snakes[i].tailRow * boardCols + snakes[i].tailCol); // move player to the tail position on the snake
+				players[activePlayer].row = snakes[i].tailRow;
+				players[activePlayer].col = snakes[i].tailCol;
+
+				printf("Player %d landed on the head of a snake! They moved to position %d\n", (activePlayer + 1), players[activePlayer].pos);
+				break; // no need to search further
+
+
+			} // if landed on snake head
+		} // search through snakes
+	}
+	else {
+		// normal square, nothing special! - check for victory
+		if (players[activePlayer].pos >= boardRows * boardCols) {
+
+			printf("Player %d has won the game!\n", (activePlayer + 1));
+
+			do {
+				printf("Would you like to start a new game? (Y/N): ");
+				scanf(" %c", &choice);
+			} while (choice != 'n'
+				&& choice != 'N'
+				&& choice != 'y'
+				&& choice != 'Y');
+
+			switch (choice) {
+			case 'n':
+			case 'N': printf("Thank you for playing!\n");
+				choice = 'x';
+				break;
+			case 'y':
+			case 'Y':startNewGame(choice);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	// other wise assign the next player
+	if (activePlayer == (numPlayers - 1)) { // if it's the last player
+		activePlayer = 0; // back to player 1
+	}
+	else {
+		activePlayer++; // next player's turn
+	}
+
+}
